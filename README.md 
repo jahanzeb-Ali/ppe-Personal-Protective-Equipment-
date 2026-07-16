@@ -1,0 +1,146 @@
+# PPE Detection with YOLO11n
+
+A real-time object detection web app that identifies **Personal Protective Equipment (PPE)** in images using a custom-trained YOLO11n model. Upload an image and the app draws bounding boxes around detected items and reports how many of each class it found.
+
+Built with [Ultralytics YOLO11](https://docs.ultralytics.com/) for detection and [Streamlit](https://streamlit.io/) for the web interface.
+
+---
+
+## Features
+
+- Upload any image (JPG / JPEG / PNG) and run detection in the browser
+- Side-by-side view of the original and annotated image — no scrolling to see results
+- Adjustable **confidence threshold** slider to filter weak detections
+- Per-class detection summary with object counts
+- Lightweight `yolo11n` model for fast inference on CPU
+
+---
+
+## Model
+
+- **Architecture:** YOLO11n (the *nano* variant — smallest and fastest in the YOLO11 family)
+- **Framework:** Ultralytics
+- **Weights:** `best.pt` (produced from training on the dataset below)
+
+YOLO11n was chosen for its small size and quick inference, which makes it well suited to free-tier deployment where CPU and memory are limited.
+
+---
+
+## Dataset
+
+Trained on the **PPE** dataset from Roboflow Universe:
+
+**https://universe.roboflow.com/ppe1-qla6c/ppe-gzzdx**
+
+The dataset contains annotated images of workers wearing protective equipment. Export it from Roboflow in **YOLO11 / YOLOv8 format**, which gives you the `data.yaml` file and the `train` / `valid` / `test` splits needed for training.
+
+The model is trained to detect **4 classes**:
+
+| # | Class  |
+|---|--------|
+| 0 | helmet |
+| 1 | vest   |
+| 2 | glove  |
+| 3 | pants  |
+
+---
+
+## Project Structure
+
+```
+.
+├── streamlit_app.py             # Streamlit application
+├── best.pt            # Trained YOLO11n weights
+├── requirements.txt   # Python dependencies
+└── README.md
+```
+
+---
+
+## Installation
+
+Clone the repository and install the dependencies:
+
+```bash
+git clone https://github.com/jahanzeb-Ali/ppe-Personal-Protective-Equipment-.git
+pip install -r requirements.txt
+```
+
+**requirements.txt**
+
+```
+streamlit
+ultralytics
+opencv-python-headless
+```
+
+> `opencv-python-headless` is used instead of the regular `opencv-python` because deployment servers have no display libraries, which otherwise causes a `libGL.so.1` error.
+
+---
+
+## Running Locally
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Then open the URL shown in the terminal (usually `http://localhost:8501`). Upload an image from the sidebar to run detection.
+
+---
+
+## Training
+
+The model was trained with the Ultralytics CLI. After exporting the dataset from Roboflow, run:
+
+```bash
+yolo detect train \
+    model=yolo11n.pt \
+    data=path/to/data.yaml \
+    epochs=100 \
+    imgsz=640
+```
+
+The best-performing weights are saved to `runs/detect/train/weights/best.pt`. Copy that file into the project root as `best.pt`.
+
+> Adjust `epochs`, `imgsz`, and other hyperparameters to match what you actually used.
+
+---
+
+## Deployment (Streamlit Community Cloud)
+
+This app is deployed for free on **Streamlit Community Cloud**:
+
+1. Push this repository (including `app.py`, `requirements.txt`, and `best.pt`) to a **public GitHub repo**.
+   - If `best.pt` is larger than 100 MB, track it with [Git LFS](https://git-lfs.com/).
+2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
+3. Select your repository, branch, and `app.py` as the entry point.
+4. Click **Deploy**. The first build takes a few minutes because `ultralytics` pulls in PyTorch.
+
+Every push to the repo redeploys the app automatically.
+
+---
+
+## Tech Stack
+
+| Component      | Tool                     |
+|----------------|--------------------------|
+| Model          | YOLO11n (Ultralytics)    |
+| Dataset        | Roboflow Universe (PPE)  |
+| Web UI         | Streamlit                |
+| Deployment     | Streamlit Community Cloud|
+
+---
+
+## Acknowledgments
+
+- [Ultralytics](https://github.com/ultralytics/ultralytics) for the YOLO11 framework
+- [Roboflow Universe](https://universe.roboflow.com/) for the PPE dataset
+
+### Third-party licenses
+
+This project builds on components that carry their own licenses, which apply independently of the MIT license above:
+
+- **Ultralytics YOLO11** is released under **AGPL-3.0**.
+- The **Roboflow PPE dataset** is subject to the license shown on its [dataset page](https://universe.roboflow.com/ppe1-qla6c/ppe-gzzdx).
+
+Please review those terms as well. This is a personal, non-commercial hobby project.
