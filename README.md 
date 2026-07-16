@@ -136,6 +136,22 @@ Every push to the repo redeploys the app automatically.
 - [Ultralytics](https://github.com/ultralytics/ultralytics) for the YOLO11 framework
 - [Roboflow Universe](https://universe.roboflow.com/) for the PPE dataset
 
+---
+
+## License
+
+This project is licensed under the **MIT License** — you are free to use, copy, modify, and share the code. See the [`LICENSE`](LICENSE) file for the full text.
+
+```
+MIT License
+
+Copyright (c) 2026 jahanzeb soomro
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction... (see the LICENSE file for full text)
+```
+
 ### Third-party licenses
 
 This project builds on components that carry their own licenses, which apply independently of the MIT license above:
